@@ -8,13 +8,14 @@ namespace HelloWorld.Actions
 {
     public class SayGoodbye : Action
     {
-        public override string Name => "Say goodbye";
+        //public override string Name => "Say goodbye";
         public override string Description => "Say goodbye action description";
-        public override Guid ActionId => Guid.Parse("db97d73c-235f-4056-8177-a5d1ae3c243d");
+        //public override Guid ActionId => Guid.Parse("db97d73c-235f-4056-8177-a5d1ae3c243d");
 
-        public override string Execute()
+        public override bool Execute(out string actionMessage)
         {
-            return "Goodbye!";
+            actionMessage = "Goodbye!";
+            return true; 
         }
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.DotNet.ProjectModel;
 
 namespace ActionFramework.App
 {
-    public static class AppHelper
+    public static class AppRepository
     {
         public static List<App> GetInstalledApps()
         {
@@ -29,6 +29,20 @@ namespace ActionFramework.App
             return apps;
         }
 
+        public static App GetApp(string appName)
+        {
+            var filePath = GetInstalledAppsDirectory() + "\\" + appName + "\\" + appName + ".dll";
+            if (!File.Exists(filePath))
+            {
+                return null;
+            }
+
+            var appAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(filePath);
+            var appType = appAssembly.GetType(appName + "." + appName);
+            var appInstance = Activator.CreateInstance(appType) as App;
+            return appInstance;
+        }
+
         private static string GetInstalledAppsDirectory()
         {
             //get path to the running application's directory
@@ -47,7 +61,12 @@ namespace ActionFramework.App
 
         public static string GetAppDirectory(string appName)
         {
-            //System.Threading.Timer
+            var appDirectory = GetInstalledAppsDirectory() + "\\" + appName;
+            if (!Directory.Exists(appDirectory))
+            {
+                return null;
+            }
+
             return GetInstalledAppsDirectory() + "\\" + appName;
         }
 

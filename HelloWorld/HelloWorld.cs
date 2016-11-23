@@ -12,7 +12,7 @@ namespace HelloWorld
     public class HelloWorld : App
     {
         public override string Description => "Hello world app";
-        public override Guid AppId => Guid.Parse("89f6005c-e8b4-45b4-bc45-f50a49288701");
+       // public override Guid AppId => Guid.Parse("89f6005c-e8b4-45b4-bc45-f50a49288701");
 
         public override List<Action> Actions => new List<Action>
         {
