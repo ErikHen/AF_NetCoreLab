@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using ActionFramework.Model;
@@ -28,8 +29,11 @@ namespace ActionFramework.Agent.API
         {
             var schedule = ActionScheduleRepository.GetActionSchedule(appName, actionName);
             schedule.Interval = 2;
-            schedule.Unit = IntervalUnit.Minute;
-            ActionScheduleRepository.SaveActionSchedule(appName, schedule);
+            schedule.Unit = IntervalUnit.Second;
+            schedule.NextRun = DateTime.UtcNow;
+            schedule.StopDateTime = DateTime.UtcNow.AddMilliseconds(20000);
+            ActionScheduleRepository.SaveActionSchedule(schedule);
+            //Todo: whenever 
 
             return schedule;
         }
@@ -37,15 +41,15 @@ namespace ActionFramework.Agent.API
         [HttpGet]
         public bool RunAction(string appName, string actionName)
         {
-            var app = AppRepository.GetApp(appName);
-            var success = false;
-            if (app != null)
-            {
-                var action = app.Actions.FirstOrDefault(a => a.ActionName == actionName);
-                success = app.RunAction(action);
-            }
+            //var app = AppRepository.GetApp(appName);
+            //var success = false;
+            //if (app != null)
+            //{
+            //    var action = app.Actions.FirstOrDefault(a => a.ActionName == actionName);
+            //    success = app.RunAction(action);
+            //}
 
-            return success;
+            return AppRepository.RunAction(appName, actionName);
         }
 
 

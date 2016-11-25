@@ -11,16 +11,18 @@ namespace ActionFramework.Agent
     public class Program
     {
         //private static Timer _timer;
-        //private static int _counter = 0;
+        private static int _counter = 0;
         public static void Main(string[] args)
         {
-            //Console.WriteLine("enter timer");
-            //_timer = new Timer(TestCallBack, _counter, 1000, 2000);
-
+            // Console.WriteLine("enter timer");
+            // var _timer = new System.Timer.Timer // Timer(TestCallBack, _counter, 1000, 2000);
+            Console.WriteLine("Setting up action timers");
+            var scheduler = new Scheduling.Scheduler();
+            scheduler.ScheduleAllActions();
 
             var host = new WebHostBuilder()
                 .UseKestrel()
-                .UseUrls("http://localhost:7406") //lägg i config
+                .UseUrls("http://localhost:7406") //lägg i config?
                 .UseStartup<Startup>()
                 .Build();
 
@@ -32,7 +34,7 @@ namespace ActionFramework.Agent
 
         //private static void TestCallBack(object counter)
         //{
-        //    var counter2 = (int) counter;
+        //    var counter2 = (int)counter;
         //    Console.WriteLine("Timercallback " + counter2 + " " + _counter + " " + DateTime.Now);
         //    _counter++;
         //    if (_counter > 10)

@@ -10,12 +10,10 @@ namespace ActionFramework.Scheduling
 {
     public static class ActionScheduleRepository
     {
-        private const string FileName = "ActionSchedules.json";
-
-        public static bool SaveActionSchedule(string appName, ActionSchedule schedule)
+        public static bool SaveActionSchedule(ActionSchedule schedule)
         {
             var successfullySaved = false;
-            var schedules = GetActionSchedules(appName);
+            var schedules = GetActionSchedules(schedule.AppName);
             var existingSchedule = schedules.FirstOrDefault(s => s.ActionName == schedule.ActionName);
             if (existingSchedule != null)
             {
@@ -24,7 +22,7 @@ namespace ActionFramework.Scheduling
             }
             schedules.Add(schedule);
 
-            var filePath = GetFilePath(appName);
+            var filePath = GetFilePath(schedule.AppName);
             if (filePath != null)
             {
                 var json = JsonConvert.SerializeObject(schedules, Formatting.Indented);
@@ -54,7 +52,7 @@ namespace ActionFramework.Scheduling
 
         public static ActionSchedule GetActionSchedule(string appName, string actionName)
         {
-            return GetActionSchedules(appName).FirstOrDefault(s => s.ActionName == actionName) ?? new ActionSchedule(actionName);
+            return GetActionSchedules(appName).FirstOrDefault(s => s.ActionName == actionName) ?? new ActionSchedule(appName, actionName);
         }
 
         private static string GetFilePath(string appName)
@@ -62,7 +60,7 @@ namespace ActionFramework.Scheduling
             var appDirectory = AppRepository.GetAppDirectory(appName);
             if (appDirectory != null)
             {
-                return appDirectory + "\\" + FileName;
+                return appDirectory + "\\ActionSchedules.json";
             }
             return null;
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Loader;
 using Microsoft.DotNet.ProjectModel;
+using System.Linq;
 
 namespace ActionFramework.App
 {
@@ -41,6 +42,19 @@ namespace ActionFramework.App
             var appType = appAssembly.GetType(appName + "." + appName);
             var appInstance = Activator.CreateInstance(appType) as App;
             return appInstance;
+        }
+
+        public static bool RunAction(string appName, string actionName)
+        {
+            var app = GetApp(appName);
+            var success = false;
+            if (app != null)
+            {
+                var action = app.Actions.FirstOrDefault(a => a.ActionName == actionName);
+                success = app.RunAction(action);
+            }
+
+            return success;
         }
 
         private static string GetInstalledAppsDirectory()
