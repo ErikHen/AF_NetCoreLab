@@ -1,8 +1,7 @@
 ﻿using ActionFramework.Scheduling;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ActionFramework.Agent.App;
 
 namespace ActionFramework.Agent.Scheduling
 {
@@ -12,11 +11,18 @@ namespace ActionFramework.Agent.Scheduling
         {
             var timers = new List<ActionTimer>();
 
-            var schedule = ActionScheduleRepository.GetActionSchedule("HelloWorld", "SayHello");
-            if (ShouldActionBeScheduled(schedule))
+            var apps = AppRepository.GetInstalledApps();
+            foreach (var app in apps)
             {
-                var testTimer = new ActionTimer(schedule);
-                timers.Add(testTimer);
+                foreach (var action in app.Actions)
+                {
+                    var schedule = ActionScheduleRepository.GetActionSchedule(app.AppName, action.ActionName);
+                    if (ShouldActionBeScheduled(schedule))
+                    {
+                        var testTimer = new ActionTimer(schedule);
+                        timers.Add(testTimer);
+                    }
+                }
             }
 
             return timers;

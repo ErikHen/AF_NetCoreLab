@@ -20,8 +20,8 @@ namespace ActionFramework.Agent.Scheduling
                 dueTime = actionSchedule.NextRun - DateTime.UtcNow;
             }
 
-            // Create a timer 
-            var timer = new Timer(RunScheduledAction, state, dueTime, TimeSpan.FromSeconds(actionSchedule.IntervalAsSeconds()));
+            // Create a timer. The timer fires once, and gets a new due-time when the action has finished running. 
+            var timer = new Timer(RunScheduledAction, state, dueTime, TimeSpan.FromMilliseconds(-1)); //-1 disables periodic runs
 
             // Keep a handle to the timer, so it can be disposed.
             state.Timer = timer;
@@ -43,22 +43,19 @@ namespace ActionFramework.Agent.Scheduling
             {
                 AppRepository.RunAction(s.ActionSchedule.AppName, s.ActionSchedule.ActionName);
 
-                //update schedule with next run date
-                s.ActionSchedule.NextRun = DateTime.UtcNow.AddSeconds(s.ActionSchedule.IntervalAsSeconds());
-                ActionScheduleRepository.SaveActionSchedule(s.ActionSchedule);
+                var nextRunDate = DateTime.UtcNow.AddSeconds(s.ActionSchedule.IntervalAsSeconds());
 
-                //todo: update timer with dueTime infinity?
-                //s.Timer.Change()
+                //update timers due time to trigger the next run
+                s.Timer.Change(nextRunDate - DateTime.UtcNow, TimeSpan.FromMilliseconds(-1));
+
+                //update schedule with next run date
+                s.ActionSchedule.NextRun = nextRunDate;
+                ActionScheduleRepository.SaveActionSchedule(s.ActionSchedule);
             }
 
-            
         }
 
-        
-
-        
     }
-
 
 
     public class TimerState
