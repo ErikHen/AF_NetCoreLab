@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		global.json = global.json
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ActionFramework", "src\ActionFramework\ActionFramework.xproj", "{86E12FE2-E8E7-4678-8F1B-77F0FA8C6E67}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ActionFramework.App", "src\ActionFramework\ActionFramework.App.xproj", "{86E12FE2-E8E7-4678-8F1B-77F0FA8C6E67}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ActionFramework.Agent", "src\ActionFramework.Agent\ActionFramework.Agent.xproj", "{B828C477-73E7-4616-8084-549598DC57A2}"
 EndProject
