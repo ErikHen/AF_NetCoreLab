@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ActionFramework.Scheduling
 {
@@ -16,16 +15,11 @@ namespace ActionFramework.Scheduling
         /// Next scheduled run of this action. Use UTC date/time.
         /// </summary>
         public DateTime NextRun { get; set; }
+
         /// <summary>
         /// Action will not run after this date.
         /// </summary>
         public DateTime StopDateTime { get; set; }
-
-        /// <summary>
-        /// When the action schedule was last updated. Use UTC date/time.
-        /// </summary>
-       // public DateTime LastUpdated { get; set; }
-        //todo: public string LastUpdatedBy { get; set; } 
 
         public double IntervalAsSeconds()
         {
@@ -41,7 +35,6 @@ namespace ActionFramework.Scheduling
 
             return seconds;
         }
-           
 
         public ActionSchedule(string appName, string actionName)
         {

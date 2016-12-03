@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ActionFramework.App;
-using ActionFramework.Scheduling;
+using ActionFramework.Agent.App;
 using Newtonsoft.Json;
+using ActionFramework.Log;
 
-namespace ActionFramework.Log
+namespace ActionFramework.Agent.Log
 {
     public static class ActionLogRepository
     {

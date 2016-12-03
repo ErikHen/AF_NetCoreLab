@@ -1,11 +1,12 @@
 {
-  "version": "1.0.0-*",
+  "version": "0.1.0-*",
   "buildOptions": {
     "emitEntryPoint": true
   },
 
   "dependencies": {
     "ActionFramework": "1.0.0-*",
+    "ActionFramework.App": "1.0.0-*",
     "Microsoft.AspNetCore.Hosting": "1.1.0",
     "Microsoft.AspNetCore.Http.Abstractions": "1.1.0",
     "Microsoft.AspNetCore.Mvc": "1.1.0",

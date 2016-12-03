@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Loader;
+using ActionFramework.Agent.Log;
 using Microsoft.DotNet.ProjectModel;
+using ActionFramework.Log;
 using System.Linq;
 
-namespace ActionFramework.App
+namespace ActionFramework.Agent.App
 {
     public static class AppRepository
     {
-        public static List<App> GetInstalledApps()
+        public static List<ActionFramework.App.App> GetInstalledApps()
         {
-            var apps = new List<App>();
+            var apps = new List<ActionFramework.App.App>();
             var appsPath = GetInstalledAppsDirectory();
             foreach (var appDirectory in Directory.GetDirectories(appsPath))
             {
@@ -22,7 +24,7 @@ namespace ActionFramework.App
                 {
                     var appAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(filePath);
                     var appType = appAssembly.GetType(appName + "." + appName);
-                    var appInstance = Activator.CreateInstance(appType) as App;
+                    var appInstance = Activator.CreateInstance(appType) as ActionFramework.App.App;
                     apps.Add(appInstance);
                 }
             }
@@ -30,7 +32,7 @@ namespace ActionFramework.App
             return apps;
         }
 
-        public static App GetApp(string appName)
+        public static ActionFramework.App.App GetApp(string appName)
         {
             var filePath = GetInstalledAppsDirectory() + "\\" + appName + "\\" + appName + ".dll";
             if (!File.Exists(filePath))
@@ -40,20 +42,35 @@ namespace ActionFramework.App
 
             var appAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(filePath);
             var appType = appAssembly.GetType(appName + "." + appName);
-            var appInstance = Activator.CreateInstance(appType) as App;
+            var appInstance = Activator.CreateInstance(appType) as ActionFramework.App.App;
             return appInstance;
         }
 
         public static bool RunAction(string appName, string actionName)
         {
-            var app = GetApp(appName);
             var success = false;
+            var app = GetApp(appName);
             if (app != null)
             {
                 var action = app.Actions.FirstOrDefault(a => a.ActionName == actionName);
-                success = app.RunAction(action);
-            }
+                var actionLog = new ActionLog(action.ActionName);
+                actionLog.StartRunDate = DateTime.UtcNow;
 
+                string actionMessage;
+                try
+                {
+                    success = action.Execute(out actionMessage);
+                }
+                catch (Exception e)
+                {
+                    actionMessage = e.Message;
+                }
+
+                actionLog.Success = success;
+                actionLog.EndRunDate = DateTime.UtcNow;
+                actionLog.LogMessage = actionMessage;
+                ActionLogRepository.SaveActionLog(appName, actionLog);
+            }
             return success;
         }
 
